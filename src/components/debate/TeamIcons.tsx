@@ -4,7 +4,7 @@ export const TeamIcons: React.FC = () => {
     return (
         <div style={{
             position: 'absolute',
-            bottom:40,
+            bottom:200,
             height:280,
             left: 0,
             display: 'flex',

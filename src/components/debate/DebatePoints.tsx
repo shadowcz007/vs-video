@@ -70,7 +70,7 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
         <div style={{}}>
             <div className="debate-side left" style={{
                 position: 'absolute',
-                top: 452,
+                top: 502,
                 left: 60,
                 zIndex: 100000
             }}>
@@ -99,7 +99,7 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
 
             <div className="debate-side right" style={{
                 position: 'absolute',
-                bottom: 500,
+                bottom: 580,
                 right: 88,
                 zIndex: 100000
             }}>
