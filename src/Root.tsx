@@ -6,7 +6,7 @@ export const RemotionRoot: React.FC = () => {
     <Composition
       id="DebateVideo"
       component={MyVideo}
-      durationInFrames={360} // 12秒 * 30fps
+      durationInFrames={450} // 15秒 * 30fps
       fps={30}
       width={1080}
       height={1920} // 竖屏格式

@@ -17,6 +17,7 @@ export const DebateScene: React.FC = () => {
     const { fps, durationInFrames } = useVideoConfig();
     let audio1 = staticFile("/a1.MP3")
     let audio2 = staticFile("/a2.MP3")
+    let music = staticFile("/music.mp3")
 
     // 确保左右两边数据长度一致，并使用总时长来计算每组数据的显示时间
     if (DEBATE_DATA.left.length !== DEBATE_DATA.right.length) {
@@ -27,11 +28,11 @@ export const DebateScene: React.FC = () => {
     const textIndex = Math.floor(frame / ITEM_DURATION);
 
     // 计算是否应该显示
-    const shouldShowSplitterEffect = frame >= fps * 1; // 2秒后显示
-    const shouldShowDebatePoints = frame >= fps * 0.6; // 2.5秒后显示
+    const shouldShowSplitterEffect = frame >= fps * 1.2; // 1.5秒后显示
+    const shouldShowDebatePoints = frame >= fps * 0.7; // 1秒后显示
 
     const toggleText = Array.from(new Array(3), (_, index) => {
-        return (index * ITEM_DURATION + (index == 0 ? fps * 0.6 : 0))
+        return (index * ITEM_DURATION + (index == 0 ? fps * 0.7 : 0))
     })
     // console.log(audioItems)
     return (
@@ -65,10 +66,12 @@ export const DebateScene: React.FC = () => {
             </span>
             <TeamIcons />
 
-            <Audio
-                src={audio1}
-                startFrom={8}
-            />
+
+            <Sequence from={8}>
+                <Audio
+                    src={audio1}
+                />
+            </Sequence>
             {
                 Array.from(toggleText).map((a) => (
                     <Sequence from={a}>
@@ -76,10 +79,12 @@ export const DebateScene: React.FC = () => {
                             src={audio2}
                         />
                     </Sequence>
-
                 ))
             }
-
+            <Audio
+                src={music}
+                startFrom={0}
+            />
             {/* {shouldShowDebatePoints && <VoteCounters />} */}
         </AbsoluteFill>
     );
