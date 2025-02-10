@@ -9,6 +9,7 @@ interface ParticleTextProps {
     style?: React.CSSProperties;
     particleCount?: number;
     particleSize?: number;
+    progress: number;
 }
 
 export const ParticleText: React.FC<ParticleTextProps> = React.memo(({ 
@@ -18,7 +19,8 @@ export const ParticleText: React.FC<ParticleTextProps> = React.memo(({
     visible, 
     style,
     particleCount = 50,
-    particleSize = 2
+    particleSize = 2,
+    progress = 0
 }) => {
     const frame = useCurrentFrame();
     const { width } = useVideoConfig();
@@ -31,7 +33,10 @@ export const ParticleText: React.FC<ParticleTextProps> = React.memo(({
         position: 'relative' as const,
         ...style,
         willChange: 'transform',
-    }), [style]);
+        opacity: progress,
+        transform: `scale(${progress})`,
+        transition: 'opacity 0.3s, transform 0.3s',
+    }), [style, progress]);
 
     const particles = React.useMemo(() => {
         return Array.from({ length: Math.min(particleCount, 50) }).map((_, i) => {
