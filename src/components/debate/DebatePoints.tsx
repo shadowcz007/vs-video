@@ -1,8 +1,10 @@
 import React from 'react';
-import { spring } from 'remotion';
+import { spring, useCurrentFrame, useVideoConfig, Audio, staticFile } from 'remotion';
 import { ParticleText } from '../ParticleText';
 import { AlignedDebateData } from '../../types/debate';
 import   {FireText}  from '../FireText';
+
+let audio=staticFile("/output_sound.wav")
 
 interface DebatePointsProps {
     alignedDebateData: AlignedDebateData;
@@ -32,9 +34,12 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
     const rightText = alignedDebateData.right[textIndex] || getLastValidText(alignedDebateData.right, textIndex - 1);
 
     return (
-        <div style={{
-            
-        }}>
+        <div style={{}}>
+            <Audio
+                src={audio}
+                startFrom={textIndex * fps} // 在每个文本切换时播放
+                endAt={(textIndex + 1) * fps}
+            />
             <div className="debate-side left" style={{
                position: 'absolute',
                top: 312,

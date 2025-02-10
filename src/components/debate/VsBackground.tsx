@@ -1,7 +1,8 @@
 import React from 'react';
-import { useCurrentFrame, spring, interpolate } from 'remotion';
+import { useCurrentFrame, spring, interpolate, staticFile } from 'remotion';
 // 假设你的SVG文件保存在 assets 目录下
-import vsBackgroundSvg from '../../assets/bg.svg';
+
+let vsBackgroundSvg = staticFile("/bg.svg")
 
 export const VsBackground: React.FC = () => {
   const frame = useCurrentFrame();
