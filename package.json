@@ -1,0 +1,21 @@
+{
+  "name": "debate-video",
+  "version": "1.0.0",
+  "dependencies": {
+    "@remotion/cli": "^4.0.260",
+    "@remotion/google-fonts": "^4.0.0",
+    "@remotion/paths": "^4.0.0",
+    "@remotion/shapes": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "^4.0.0"
+  },
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render DebateVideo out/video.mp4",
+    "upgrade": "remotion upgrade"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.8"
+  }
+}

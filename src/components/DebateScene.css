@@ -1,0 +1,38 @@
+/* 动态背景脉冲动画 */
+@keyframes backgroundPulse {
+  0% {
+    background-color: #000000;
+  }
+  50% {
+    background-color: #333333;
+  }
+  100% {
+    background-color: #000000;
+  }
+}
+
+/* 呼吸动画 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 你还可以添加其他样式规则 */ 
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
