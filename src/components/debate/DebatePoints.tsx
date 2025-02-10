@@ -35,11 +35,11 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
 
     return (
         <div style={{}}>
-            <Audio
+            {/* <Audio
                 src={audio}
                 startFrom={textIndex * fps} // 在每个文本切换时播放
                 endAt={(textIndex + 1) * fps}
-            />
+            /> */}
             <div className="debate-side left" style={{
                position: 'absolute',
                top: 312,
