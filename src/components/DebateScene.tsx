@@ -133,7 +133,6 @@ export const DebateScene: React.FC = () => {
 
     return (
         <AbsoluteFill>
-
             <Background
                 frame={frame}
                 durationInFrames={durationInFrames}
