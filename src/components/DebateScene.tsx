@@ -30,7 +30,7 @@ export const DebateScene: React.FC = () => {
     const shouldShowSplitterEffect = frame >= fps * 1; // 2秒后显示
     const shouldShowDebatePoints = frame >= fps * 0.6; // 2.5秒后显示
 
-    const audioItems = Array.from(new Array(3), (_, index) => {
+    const toggleText = Array.from(new Array(3), (_, index) => {
         return (index * ITEM_DURATION + (index == 0 ? fps * 0.6 : 0))
     })
     // console.log(audioItems)
@@ -45,6 +45,7 @@ export const DebateScene: React.FC = () => {
                 textIndex={textIndex}
                 frame={frame}
                 fps={fps}
+                toggleText={toggleText}
             />}
             <span style={{
                 position: 'absolute',
@@ -69,7 +70,7 @@ export const DebateScene: React.FC = () => {
                 startFrom={8}
             />
             {
-                Array.from(audioItems).map((a) => (
+                Array.from(toggleText).map((a) => (
                     <Sequence from={a}>
                         <Audio
                             src={audio2}

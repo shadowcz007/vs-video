@@ -10,13 +10,15 @@ interface DebatePointsProps {
     textIndex: number;
     frame: number;
     fps: number;
+    toggleText: number[];
 }
 
 export const DebatePoints: React.FC<DebatePointsProps> = ({
     alignedDebateData,
     textIndex,
     frame,
-    fps
+    fps,
+    toggleText
 }) => {
 
     // 添加获取最后有效文本的逻辑
@@ -31,6 +33,38 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
 
     const leftText = alignedDebateData.left[textIndex] || getLastValidText(alignedDebateData.left, textIndex - 1);
     const rightText = alignedDebateData.right[textIndex] || getLastValidText(alignedDebateData.right, textIndex - 1);
+
+    // 修改抖动动画逻辑
+    const shakeDuration = fps*0.3; // 1秒的持续时间
+    
+    const getShakeAnimation = (currentFrame: number) => {
+        // 找到最近的触发帧
+        const activeShakeFrame = toggleText.find(startFrame => 
+            currentFrame >= startFrame && currentFrame <= startFrame + shakeDuration
+        );
+
+        if (!activeShakeFrame) {
+            return { x: 0, y: 0 };
+        }
+        
+        const progress = (currentFrame - activeShakeFrame) / shakeDuration;
+        const intensity = spring({
+            frame: currentFrame - activeShakeFrame,
+            fps,
+            config: {
+                damping: 5,
+                mass: 0.5,
+                stiffness: 100,
+            }
+        });
+        
+        return {
+            x: Math.sin(progress * Math.PI * 8) * 10 * intensity,
+            y: Math.cos(progress * Math.PI * 6) * 10 * intensity,
+        };
+    };
+
+    const shakeOffset = getShakeAnimation(frame);
 
     return (
         <div style={{}}>
@@ -49,7 +83,7 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
-                transform: 'translate(-50%, -50%)',
+                transform: `translate(-50%, -50%) translate(${shakeOffset.x}px, ${shakeOffset.y}px)`,
                 zIndex: 99999
             }}>
                 <img 
