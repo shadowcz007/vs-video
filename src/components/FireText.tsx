@@ -9,7 +9,7 @@ export const FireText = ({ text, durationInFrames = 120 }: { text: string, durat
   const scale = interpolate(
     frame % (durationInFrames / 2),
     [0, durationInFrames / 4, durationInFrames / 2],
-    [1, 1.1, 1],
+    [1, 1.05, 1],
     {
       extrapolateRight: 'clamp',
     }

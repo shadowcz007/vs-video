@@ -1,10 +1,9 @@
 import React from 'react';
-import { spring, useCurrentFrame, useVideoConfig, Audio, staticFile } from 'remotion';
+import { spring, useCurrentFrame, useVideoConfig, staticFile } from 'remotion';
 import { ParticleText } from '../ParticleText';
 import { AlignedDebateData } from '../../types/debate';
-import   {FireText}  from '../FireText';
+import { FireText } from '../FireText';
 
-let audio=staticFile("/output_sound.wav")
 
 interface DebatePointsProps {
     alignedDebateData: AlignedDebateData;
@@ -19,7 +18,7 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
     frame,
     fps
 }) => {
-  
+
     // 添加获取最后有效文本的逻辑
     const getLastValidText = (texts: string[], currentIndex: number) => {
         for (let i = currentIndex; i >= 0; i--) {
@@ -35,31 +34,43 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
 
     return (
         <div style={{}}>
-            {/* <Audio
-                src={audio}
-                startFrom={textIndex * fps} // 在每个文本切换时播放
-                endAt={(textIndex + 1) * fps}
-            /> */}
             <div className="debate-side left" style={{
-               position: 'absolute',
-               top: 312,
-               left: 48,
-               width: '60%', 
-               zIndex: 100000
+                position: 'absolute',
+                top: 452,
+                left: 48,
+                zIndex: 100000
             }}>
                 <FireText
-                    text={leftText} 
+                    text={leftText}
                 />
             </div>
+
+            <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 99999
+            }}>
+                <img 
+                    src={staticFile('debate-center.png')} 
+                    alt="Debate Center"
+                    style={{
+                        width: 300,
+                        borderRadius:88,
+                        height: 'auto'
+                    }}
+                />
+            </div>
+
             <div className="debate-side right" style={{
-              position: 'absolute',
-              bottom:380,
-              left: '30%',
-              width: '60%', 
-              zIndex: 100000
+                position: 'absolute',
+                bottom: 500,
+                right: 88,
+                zIndex: 100000
             }}>
                 <FireText
-                    text={rightText}  
+                    text={rightText}
                 />
             </div>
         </div>
