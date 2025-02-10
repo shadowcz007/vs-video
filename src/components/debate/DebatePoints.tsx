@@ -71,7 +71,7 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
             <div className="debate-side left" style={{
                 position: 'absolute',
                 top: 452,
-                left: 48,
+                left: 60,
                 zIndex: 100000
             }}>
                 <FireText

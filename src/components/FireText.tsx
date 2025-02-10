@@ -48,7 +48,7 @@ export const FireText = ({ text, durationInFrames = 120 }: { text: string, durat
      <p
         style={{
           fontFamily: "'Arial Black', sans-serif",
-          fontSize: 100,
+          fontSize: 72,
           fontWeight: 'bold',
           color: 'white',
           textAlign: 'center',

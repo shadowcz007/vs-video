@@ -50,7 +50,7 @@ export const DebateScene: React.FC = () => {
             />}
             <span style={{
                 position: 'absolute',
-                top: 0,
+                top: 180,
                 left: 0,
                 color: 'white',
                 fontSize: 72, fontWeight: 800,

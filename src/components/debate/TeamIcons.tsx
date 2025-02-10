@@ -4,17 +4,17 @@ export const TeamIcons: React.FC = () => {
     return (
         <div style={{
             position: 'absolute',
-            bottom:0,
+            bottom:40,
             height:280,
-            left: -3,
+            left: 0,
             display: 'flex',
-            width:' 101%',
+            width:' 100%',
             justifyContent: 'space-around',
-            padding: '12px 24px',
+            padding: '12px 40px',
             backgroundColor: 'black'
         }}>
             <span style={{ color: 'white', fontSize: 44,marginRight:24,fontWeight:800 }} >
-                你支持哪一方？点击下方对应图标投票<br></br>
+                你支持哪一方？点击下方图标投票<br></br>
                 <span style={{fontSize:32,fontWeight:200}}>Mixlab AI编程训练营 出品</span>
 
             </span>
@@ -23,7 +23,7 @@ export const TeamIcons: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                marginRight: 44
+                marginRight: 36
             }}>
                 <div style={{
                     width: 80,
