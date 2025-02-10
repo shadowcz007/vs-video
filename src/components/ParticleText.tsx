@@ -23,7 +23,7 @@ export const ParticleText: React.FC<ParticleTextProps> = React.memo(({
     progress = 0
 }) => {
     const frame = useCurrentFrame();
-    const { width } = useVideoConfig();
+    const { width, fps } = useVideoConfig();
 
     const particleOffset = interpolate(frame, [0, 20], [width * (side === 'left' ? -1 : 1), 0], {
         extrapolateRight: "clamp",
@@ -32,11 +32,26 @@ export const ParticleText: React.FC<ParticleTextProps> = React.memo(({
     const containerStyle = React.useMemo(() => ({
         position: 'relative' as const,
         ...style,
-        willChange: 'transform',
-        opacity: progress,
-        transform: `scale(${progress})`,
-        transition: 'opacity 0.3s, transform 0.3s',
-    }), [style, progress]);
+        willChange: 'transform, opacity',
+        opacity: spring({
+            frame: progress * 100,
+            fps,
+            config: {
+                damping: 40,
+                mass: 1.5,
+                stiffness: 50
+            }
+        }),
+        transform: `scale(${spring({
+            frame: progress * 100,
+            fps,
+            config: {
+                damping: 40,
+                mass: 1.5,
+                stiffness: 50
+            }
+        })})`,
+    }), [style, progress, fps]);
 
     const particles = React.useMemo(() => {
         return Array.from({ length: Math.min(particleCount, 50) }).map((_, i) => {

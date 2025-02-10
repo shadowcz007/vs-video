@@ -1,8 +1,20 @@
 import React from 'react';
+import { useCurrentFrame, spring, interpolate } from 'remotion';
 // 假设你的SVG文件保存在 assets 目录下
 import vsBackgroundSvg from '../../assets/bg.svg';
 
 export const VsBackground: React.FC = () => {
+  const frame = useCurrentFrame();
+  const opacity = spring({
+    frame,
+    fps: 30,
+    config: {
+      damping: 20,
+      mass: 0.5,
+      stiffness: 100
+    }
+  });
+
   return (
     <div 
       style={{
@@ -12,7 +24,8 @@ export const VsBackground: React.FC = () => {
         zIndex: 0,
         backgroundImage: `url(${vsBackgroundSvg})`,
         backgroundSize: '100% 100%',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        opacity: interpolate(opacity, [0, 1], [0.8, 1])
       }}
     >
       {/* VS标志 */}

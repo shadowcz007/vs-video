@@ -16,8 +16,12 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
     frame,
     fps
 }) => {
-    const springConfig = { damping: 15, mass: 0.5, stiffness: 100 };
-
+    const springConfig = { 
+        damping: 40,    // 增加阻尼
+        mass: 1.5,      // 增加质量
+        stiffness: 50 // 降低刚度使动画更自然
+    };
+ 
     return (
         <div style={{
             display: 'flex',

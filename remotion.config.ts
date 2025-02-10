@@ -16,4 +16,5 @@ Config.setVideoImageFormat('jpeg');
 Config.setPixelFormat('yuv420p');
 
 // 添加入口文件配置
-Config.setEntryPoint('src/index.ts'); 
+Config.setEntryPoint('src/index.ts');
+
