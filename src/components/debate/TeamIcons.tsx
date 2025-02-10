@@ -4,14 +4,15 @@ export const TeamIcons: React.FC = () => {
     return (
         <div style={{
             position: 'absolute',
-            bottom:200,
-            height:280,
+            bottom:0,
+            height:480,
             left: 0,
             display: 'flex',
             width:' 100%',
             justifyContent: 'space-around',
             padding: '12px 40px',
-            backgroundColor: 'black'
+            backgroundColor: 'black',
+            paddingBottom: 200
         }}>
             <span style={{ color: 'white', fontSize: 44,marginRight:24,fontWeight:800 }} >
                 你支持哪一方？点击下方图标投票<br></br>
