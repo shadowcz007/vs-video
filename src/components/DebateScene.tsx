@@ -10,6 +10,7 @@ import { DebatePoints } from './debate/DebatePoints';
 import { SplitterEffect } from './SplitterEffect';
 import { CompetitionPattern } from '../types/debate';
 import { preprocessDebateData, getRandomVotes, formatVotes } from '../utils/voteCalculations';
+import { VsBackground } from './debate/VsBackground';
 
 // 使用预处理后的数据
 const alignedDebateData = preprocessDebateData(DEBATE_DATA);
@@ -22,7 +23,7 @@ export const DebateScene: React.FC = () => {
     const competitionPattern = React.useMemo((): CompetitionPattern => {
         const isLeftWinner = Math.random() > 0.5;
         const stageCount = 3 + Math.floor(Math.random() * 3); // 3-5个阶段
-        
+
         const stages = [];
         let currentTime = 0;
         let leftRatio = Math.random() * 0.5 + 0.2; // 0.2-0.7
@@ -62,24 +63,20 @@ export const DebateScene: React.FC = () => {
 
     // 使用 useMemo 设置最终票数
     const finalVotes = React.useMemo(() => ({
-        left: getRandomVotes(12000),
-        right: getRandomVotes(12000)
+        left: getRandomVotes(20000),
+        right: getRandomVotes(20000)
     }), []);
 
     const progress = interpolate(frame, [0, durationInFrames], [0, 1]);
-    
+
     // 根据当前进度计算票数
     const calculateVotes = (progress: number, isLeft: boolean) => {
         const pattern = competitionPattern.stages;
-        
-        // 记录历史最高票数
         let highestVotes = 0;
-        
-        // 遍历所有已经过的阶段，计算累积票数
+
         for (let i = 0; i < pattern.length; i++) {
             const currentStage = pattern[i];
             if (progress <= currentStage.time) {
-                // 计算当前阶段内的进度
                 const startStage = i === 0 ? { time: 0, leftRatio: 0, rightRatio: 0 } : pattern[i - 1];
                 const stageProgress = interpolate(
                     progress,
@@ -88,36 +85,33 @@ export const DebateScene: React.FC = () => {
                     { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' }
                 );
 
-                // 获取当前阶段的起始和结束比率
                 const startRatio = isLeft ? startStage.leftRatio : startStage.rightRatio;
                 const endRatio = isLeft ? currentStage.leftRatio : currentStage.rightRatio;
                 
-                // 计算增长速度系数（根据竞态关系调整）
+                // 降低速度倍率的差异
                 const competitorRatio = isLeft ? currentStage.rightRatio : currentStage.leftRatio;
-                const speedMultiplier = endRatio > competitorRatio ? 1.2 : 0.8;
-                
-                // 使用 spring 函数使增长更平滑
+                const speedMultiplier = endRatio > competitorRatio ? 1.1 : 0.9; // 原来是 1.2 和 0.8
+
+                // 调整 spring 参数使动画更平滑
                 const currentRatio = spring({
                     frame: stageProgress * 100,
                     fps: 30,
                     config: {
-                        damping: 15,
-                        mass: 0.5,
-                        stiffness: 100 * speedMultiplier
+                        damping: 25, // 增加阻尼，原来是 15
+                        mass: 1, // 增加质量，原来是 0.5
+                        stiffness: 80 * speedMultiplier // 降低刚度，原来是 100
                     }
                 }) * (endRatio - startRatio) + startRatio;
 
                 const currentVotes = Math.floor(
                     (isLeft ? finalVotes.left : finalVotes.right) * currentRatio
                 );
-                
-                // 确保票数只增不减
+
                 highestVotes = Math.max(highestVotes, currentVotes);
                 return highestVotes;
             }
         }
 
-        // 如果超过所有阶段，返回最终票数
         return isLeft ? finalVotes.left : finalVotes.right;
     };
 
@@ -128,34 +122,37 @@ export const DebateScene: React.FC = () => {
         delay: 10
     });
 
-    const textIndex = Math.floor(frame / (durationInFrames / DEBATE_DATA.left.length));
+    const textIndex = Math.floor(frame / (360 / DEBATE_DATA.left.length));
     const leftVotes = calculateVotes(progress, true);
     const rightVotes = calculateVotes(progress, false);
 
+    // 计算是否应该显示VS背景
+    const shouldShowVs = frame >= fps * 1.5; // 1.5秒后显示
+    const shouldShowSplitterEffect = frame >= fps * 2; // 2秒后显示
+    const shouldShowDebatePoints = frame >= fps * 2.5; // 2.5秒后显示
+
     return (
         <AbsoluteFill>
-            <Background 
+
+            <Background
                 frame={frame}
                 durationInFrames={durationInFrames}
                 splitProgress={splitProgress}
             />
-            <SplitterEffect />
-            <DebatePoints 
+            {shouldShowVs && <VsBackground />}
+            {shouldShowSplitterEffect && <SplitterEffect />}
+            {shouldShowDebatePoints && <DebatePoints
                 alignedDebateData={alignedDebateData}
                 textIndex={textIndex}
                 frame={frame}
                 fps={fps}
-            />
-            <ProgressBar progress={progress} />
-            <InteractionHint 
-                frame={frame}
-                durationInFrames={durationInFrames}
-            />
-            <VoteCounters 
+            />}
+
+            {shouldShowDebatePoints && <VoteCounters
                 leftVotes={leftVotes}
                 rightVotes={rightVotes}
                 formatVotes={formatVotes}
-            />
+            />}
         </AbsoluteFill>
     );
 }; 

@@ -5,9 +5,11 @@ export const SplitterEffect: React.FC = () => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
 
+  const loopedFrame = frame % 120;
+
   const beamWidth = interpolate(
-    frame,
-    [0, 15, 45, 60],
+    loopedFrame,
+    [0, 20, 60, 80],
     [10, 15, 15, 10],
     {
       extrapolateRight: "clamp"
@@ -15,7 +17,7 @@ export const SplitterEffect: React.FC = () => {
   );
 
   const opacity = interpolate(
-    frame,
+    loopedFrame,
     [0, 15, 45, 60],
     [0.4, 0.8, 0.8, 0.4],
     {
@@ -31,9 +33,16 @@ export const SplitterEffect: React.FC = () => {
   }).path;
 
   const pathOffset = interpolate(
-    frame,
+    loopedFrame,
     [0, 30, 60, 90],
     [0, 50, -30, 0],
+    { extrapolateRight: "clamp" }
+  );
+
+  const rotation = interpolate(
+    loopedFrame,
+    [0, 30, 60, 90],
+    [0, -15, 15, 0],
     { extrapolateRight: "clamp" }
   );
 
@@ -47,7 +56,7 @@ export const SplitterEffect: React.FC = () => {
     >
       <path
         d={path}
-        transform={`translate(${width/2 - beamWidth/2} 0) translate(${pathOffset} 0)`}
+        transform={`translate(${width/2 - beamWidth/2} 0) translate(${pathOffset} 0) rotate(${rotation} ${beamWidth/2} ${height/2})`}
         fill="rgba(0,255,255,0.3)"
         opacity={opacity * 0.5}
         style={{
@@ -57,7 +66,7 @@ export const SplitterEffect: React.FC = () => {
       
       <path
         d={path}
-        transform={`translate(${width/2 - beamWidth/2} 0) translate(${pathOffset} 0)`}
+        transform={`translate(${width/2 - beamWidth/2} 0) translate(${pathOffset} 0) rotate(${rotation} ${beamWidth/2} ${height/2})`}
         fill="rgba(0,255,255,0.6)"
         opacity={opacity * 0.7}
         style={{
@@ -67,7 +76,7 @@ export const SplitterEffect: React.FC = () => {
       
       <path
         d={path}
-        transform={`translate(${width/2 - beamWidth/2} 0) translate(${pathOffset} 0)`}
+        transform={`translate(${width/2 - beamWidth/2} 0) translate(${pathOffset} 0) rotate(${rotation} ${beamWidth/2} ${height/2})`}
         fill="#ffffff"
         opacity={opacity}
         style={{

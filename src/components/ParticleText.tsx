@@ -25,7 +25,7 @@ export const ParticleText: React.FC<ParticleTextProps> = React.memo(({
     const frame = useCurrentFrame();
     const { width } = useVideoConfig();
 
-    const particleOffset = interpolate(frame, [0, 15], [width * (side === 'left' ? -1 : 1), 0], {
+    const particleOffset = interpolate(frame, [0, 20], [width * (side === 'left' ? -1 : 1), 0], {
         extrapolateRight: "clamp",
     });
 
@@ -95,7 +95,7 @@ export const ParticleText: React.FC<ParticleTextProps> = React.memo(({
             <div style={{
                 color,
                 fontFamily: 'Inter',
-                fontSize: '4.5vw',
+                fontSize: 100,
                 fontWeight: 'bold',
                 letterSpacing: '0.5px',
                 textShadow: `0 0 10px ${color}80`,
