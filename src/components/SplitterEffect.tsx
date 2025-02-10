@@ -41,9 +41,12 @@ export const SplitterEffect: React.FC = () => {
 
   const rotation = interpolate(
     loopedFrame,
-    [0, 30, 60, 90],
-    [0, -15, 15, 0],
-    { extrapolateRight: "clamp" }
+    [0, 30, 60, 90, 120],
+    [20, 20, 20, 20, 20],
+    {
+      extrapolateRight: "clamp",
+      easing: (t) => Math.sin(t * Math.PI)
+    }
   );
 
   return (

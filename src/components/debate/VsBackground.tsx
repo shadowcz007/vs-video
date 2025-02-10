@@ -16,7 +16,7 @@ export const VsBackground: React.FC = () => {
   });
 
   return (
-    <div 
+    <div
       style={{
         position: 'absolute',
         width: '100%',
@@ -25,11 +25,12 @@ export const VsBackground: React.FC = () => {
         backgroundImage: `url(${vsBackgroundSvg})`,
         backgroundSize: '100% 100%',
         backgroundRepeat: 'no-repeat',
-        opacity: interpolate(opacity, [0, 1], [0.8, 1])
+        opacity: interpolate(opacity, [0, 1], [0.8, 1]),
+        filter: 'brightness(0.4)'
       }}
     >
       {/* VS标志 */}
-      <svg 
+      <svg
         viewBox="0 0 40 40"
         style={{
           position: 'absolute',

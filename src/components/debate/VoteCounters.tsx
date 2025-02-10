@@ -3,7 +3,7 @@ import { useCurrentFrame, spring, interpolate, useVideoConfig } from 'remotion';
 import { formatVotes, getRandomVotes, } from '../../utils/voteCalculations';
 import { CompetitionPattern } from '../../types/debate';
 interface VoteCountersProps {
-    
+
 }
 
 // 创建通用的计数器样式
@@ -19,9 +19,9 @@ const commonCounterStyle: any = {
         transform: 'scale(1.05)',
     }
 };
- 
 
-export const VoteCounters: React.FC<VoteCountersProps> = ( ) => {
+
+export const VoteCounters: React.FC<VoteCountersProps> = () => {
     const { fps, durationInFrames } = useVideoConfig();
     const frame = useCurrentFrame();
     // 使用 useMemo 设置最终票数
@@ -30,12 +30,10 @@ export const VoteCounters: React.FC<VoteCountersProps> = ( ) => {
         right: getRandomVotes(20000)
     }), []);
 
-
-
     // 随机生成竞争模式
     const competitionPattern = React.useMemo((): CompetitionPattern => {
         const isLeftWinner = Math.random() > 0.5;
-        const stageCount = 3 + Math.floor(Math.random() * 3); // 3-5个阶段
+        const stageCount = 3; // 固定为3个阶段
 
         const stages = [];
         let currentTime = 0;
@@ -44,7 +42,7 @@ export const VoteCounters: React.FC<VoteCountersProps> = ( ) => {
 
         // 生成中间阶段
         for (let i = 0; i < stageCount; i++) {
-            currentTime += (1 / stageCount) * (0.8 + Math.random() * 0.4); // 添加一些随机性
+            currentTime += 1 / 3; // 平均分配时间
             if (currentTime > 1) currentTime = 1;
 
             // 随机调整比率
@@ -77,65 +75,61 @@ export const VoteCounters: React.FC<VoteCountersProps> = ( ) => {
 
     const progress = interpolate(frame, [0, durationInFrames], [0, 1]);
 
+    // 添加状态来记录之前的票数
+    const [prevLeftVotes, setPrevLeftVotes] = React.useState(0);
+    const [prevRightVotes, setPrevRightVotes] = React.useState(0);
+
     // 根据当前进度计算票数
-    const calculateVotes = (progress: number, isLeft: boolean) => {
+    const calculateVotes = React.useCallback((progress: number, isLeft: boolean) => {
         const pattern = competitionPattern.stages;
-        let highestVotes = 0;
+        
+        // 找到当前所在的阶段
+        const currentStageIndex = pattern.findIndex(stage => progress <= stage.time);
+        const currentStage = currentStageIndex === -1 ? pattern[pattern.length - 1] : pattern[currentStageIndex];
+        const prevStage = currentStageIndex <= 0 ? 
+            { time: 0, leftRatio: 0, rightRatio: 0 } : 
+            pattern[currentStageIndex - 1];
 
-        for (let i = 0; i < pattern.length; i++) {
-            const currentStage = pattern[i];
-            if (progress <= currentStage.time) {
-                const startStage = i === 0 ? { time: 0, leftRatio: 0, rightRatio: 0 } : pattern[i - 1];
-                const stageProgress = interpolate(
-                    progress,
-                    [startStage.time, currentStage.time],
-                    [0, 1],
-                    { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' }
-                );
-
-                const startRatio = isLeft ? startStage.leftRatio : startStage.rightRatio;
-                const endRatio = isLeft ? currentStage.leftRatio : currentStage.rightRatio;
-
-                // 降低速度倍率的差异
-                const competitorRatio = isLeft ? currentStage.rightRatio : currentStage.leftRatio;
-                const speedMultiplier = endRatio > competitorRatio ? 1.1 : 0.9; // 原来是 1.2 和 0.8
-
-                // 调整 spring 参数使动画更平滑
-                const currentRatio = spring({
-                    frame: stageProgress * 100,
-                    fps,
-                    config: {
-                        damping: 25, // 增加阻尼，原来是 15
-                        mass: 1, // 增加质量，原来是 0.5
-                        stiffness: 80 * speedMultiplier // 降低刚度，原来是 100
-                    }
-                }) * (endRatio - startRatio) + startRatio;
-
-                const currentVotes = Math.floor(
-                    (isLeft ? finalVotes.left : finalVotes.right) * currentRatio
-                );
-
-                highestVotes = Math.max(highestVotes, currentVotes);
-                return highestVotes;
+        // 计算阶段内的进度，添加更平滑的弹性动画
+        const stageProgress = spring({
+            frame: frame,
+            fps,
+            config: {
+                damping: 60,
+                mass: 0.8,
+                stiffness: 100
             }
-        }
+        });
 
-        return isLeft ? finalVotes.left : finalVotes.right;
-    };
+        // 计算当前比率
+        const startRatio = isLeft ? prevStage.leftRatio : prevStage.rightRatio;
+        const endRatio = isLeft ? currentStage.leftRatio : currentStage.rightRatio;
+        
+        // 使用 interpolate 进行平滑插值
+        const currentRatio = interpolate(
+            stageProgress,
+            [0, 1],
+            [startRatio, endRatio],
+            {
+                extrapolateLeft: 'clamp',
+                extrapolateRight: 'clamp',
+                easing: (t) => t * t * (3 - 2 * t)
+            }
+        );
 
-    const leftVotes = calculateVotes(progress, true);
-    const rightVotes = calculateVotes(progress, false);
+        // 计算新的票数
+        const newVotes = Math.round(
+            (isLeft ? finalVotes.left : finalVotes.right) * currentRatio
+        );
 
-    const scale = spring({
-        frame,
-        fps: 30,
-        config: {
-            damping: 15,
-            mass: 0.5,
-            stiffness: 100
-        }
-    });
+        return newVotes;
+    }, [frame, fps, competitionPattern.stages, finalVotes]);
 
+    // 使用 useMemo 缓存计算结果
+    const leftVotes = React.useMemo(() => calculateVotes(progress, true), [calculateVotes, progress]);
+    const rightVotes = React.useMemo(() => calculateVotes(progress, false), [calculateVotes, progress]);
+
+   
     const counterStyle = (color: string, top: number = 100) => ({
         ...commonCounterStyle,
         color,
@@ -144,8 +138,7 @@ export const VoteCounters: React.FC<VoteCountersProps> = ( ) => {
         textShadow: `0 2px 10px ${color}80`,
         position: 'absolute' as const,
         top,
-        zIndex: 100000,
-        transform: `scale(${scale})`
+        zIndex: 100000, 
     });
 
     return (

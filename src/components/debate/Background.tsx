@@ -39,7 +39,7 @@ export const Background: React.FC<BackgroundProps> = () => {
             position: 'absolute',
             top: 0,
             overflow: 'hidden',
-            transform: 'rotate(15deg) scale(1.5) translate(40px, 0)'
+            transform: 'rotate(21deg) scale(1.5) translate(-33px, 0px)'
         }}>
             <div style={{
                 flex: 1,

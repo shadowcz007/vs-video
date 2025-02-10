@@ -2,6 +2,7 @@ import React from 'react';
 import { spring } from 'remotion';
 import { ParticleText } from '../ParticleText';
 import { AlignedDebateData } from '../../types/debate';
+import   {FireText}  from '../FireText';
 
 interface DebatePointsProps {
     alignedDebateData: AlignedDebateData;
@@ -16,55 +17,44 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
     frame,
     fps
 }) => {
-    const springConfig = { 
-        damping: 40,    // 增加阻尼
-        mass: 1.5,      // 增加质量
-        stiffness: 50 // 降低刚度使动画更自然
+  
+    // 添加获取最后有效文本的逻辑
+    const getLastValidText = (texts: string[], currentIndex: number) => {
+        for (let i = currentIndex; i >= 0; i--) {
+            if (texts[i]) {
+                return texts[i];
+            }
+        }
+        return '';
     };
- 
+
+    const leftText = alignedDebateData.left[textIndex] || getLastValidText(alignedDebateData.left, textIndex - 1);
+    const rightText = alignedDebateData.right[textIndex] || getLastValidText(alignedDebateData.right, textIndex - 1);
+
     return (
         <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            // padding: '0 50px',
-            position: 'relative',
-            top: '30%',
-            transform: 'translateY(-50%)',
-            zIndex: 1000
+            
         }}>
             <div className="debate-side left" style={{
-                width: '55%',
-                position: 'relative',
-                top: -120
+               position: 'absolute',
+               top: 312,
+               left: 48,
+               width: '60%', 
+               zIndex: 100000
             }}>
-                <ParticleText
-                    text={alignedDebateData.left[textIndex] || ''}
-                    progress={spring({
-                        frame,
-                        fps,
-                        config: springConfig
-                    })}
-                    color="#FFFFFF"
-                    side="left"
-                    visible={true}
+                <FireText
+                    text={leftText} 
                 />
             </div>
             <div className="debate-side right" style={{
-                width: '55%',
-                position: 'relative',
-                top: 900,
-                left:-98
+              position: 'absolute',
+              bottom:380,
+              left: '30%',
+              width: '60%', 
+              zIndex: 100000
             }}>
-                <ParticleText
-                    text={alignedDebateData.right[textIndex] || ''}
-                    progress={spring({
-                        frame,
-                        fps,
-                        config: springConfig
-                    })}
-                    color="#FFFFFF"
-                    side="right"
-                    visible={true}
+                <FireText
+                    text={rightText}  
                 />
             </div>
         </div>

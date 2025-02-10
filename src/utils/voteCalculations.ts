@@ -12,14 +12,4 @@ export const formatVotes = (num: number) => {
     return num.toString();
 };
 
-export const preprocessDebateData = (data: DebateData) => {
-    const maxLength = Math.max(
-        ...data.left.map((text: string) => text.length),
-        ...data.right.map((text: string) => text.length)
-    );
-
-    const alignedLeft = data.left.map(text => text.padEnd(maxLength, '——'));
-    const alignedRight = data.right.map(text => text.padEnd(maxLength, '——'));
-
-    return { left: alignedLeft, right: alignedRight };
-}; 
+ 
