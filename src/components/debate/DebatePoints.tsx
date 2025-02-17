@@ -6,7 +6,7 @@ import { FireText } from '../FireText';
 
 
 interface DebatePointsProps {
-    alignedDebateData: AlignedDebateData;
+    alignedDebateData: AlignedDebateData & { centerImage?: string };
     textIndex: number;
     frame: number;
     fps: number;
@@ -87,7 +87,7 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
                 zIndex: 99999
             }}>
                 <img 
-                    src={staticFile('debate-center.png')} 
+                    src={alignedDebateData.centerImage || staticFile('debate-center.png')} 
                     alt="Debate Center"
                     style={{
                         width: 300,

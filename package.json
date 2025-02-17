@@ -2,21 +2,35 @@
   "name": "debate-video",
   "version": "1.0.0",
   "dependencies": {
-    "@remotion/cli": "^4.0.260",
-    "@remotion/google-fonts": "^4.0.0",
-    "@remotion/paths": "^4.0.0",
-    "@remotion/player": "^4.0.265",
-    "@remotion/shapes": "^4.0.0",
+    "@remotion/bundler": "^4.0.265",
+    "@remotion/cli": "4.0.260",
+    "@remotion/google-fonts": "4.0.260",
+    "@remotion/paths": "4.0.260",
+    "@remotion/player": "4.0.260",
+    "@remotion/renderer": "^4.0.265",
+    "@remotion/shapes": "4.0.260",
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "knex": "^2.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "remotion": "^4.0.0"
+    "remotion": "4.0.260",
+    "sqlite3": "^5.1.6"
   },
   "scripts": {
-    "start": "remotion studio",
     "build": "remotion render DebateVideo out/video.mp4",
-    "upgrade": "remotion upgrade"
+    "build:preview": "remotion preview",
+    "build:custom": "remotion render DebateVideo out/video.mp4 --codec h264 --quality 80",
+    "upgrade": "remotion upgrade",
+    "render": "ts-node scripts/render.ts",
+    "start:client": "remotion studio",
+    "start:server": "ts-node src/backend/index.ts",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\""
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/react": "^19.0.8"
   }
 }

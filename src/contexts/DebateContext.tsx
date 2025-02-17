@@ -1,9 +1,13 @@
 import React, { createContext, useContext, useState } from 'react';
+import { loadDebateData } from '../utils/fileUtils';
+import { DEBATE_DATA } from '../constants';
 
 interface DebateData {
   title: string;
   left: string[];
   right: string[];
+  centerImage?: any;
+  id?: number;
 }
 
 interface DebateContextType {
@@ -14,21 +18,13 @@ interface DebateContextType {
 const DebateContext = createContext<DebateContextType | undefined>(undefined);
 
 export const DebateProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [debateData, setDebateData] = useState({
-    title: "知识工作重塑与人机协同的未来",
-    left: [
-      "增强智能 成为新标准",
-      "知识生产从 线性 到 网络化",
-      "创造性任务 回归人类核心价值"
-    ],
-    right: [
-      "认知过载 信息焦虑",
-      "技能快速迭代 持续学习压力",
-      "人机伦理边界 身份认同危机"
-    ]
+  const [debateData, setDebateData] = useState(() => {
+    const savedData = loadDebateData();
+    return savedData || DEBATE_DATA;
   });
 
   return (
+    // @ts-ignore
     <DebateContext.Provider value={{ debateData, setDebateData }}>
       {children}
     </DebateContext.Provider>

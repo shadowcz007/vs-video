@@ -4,10 +4,11 @@ interface DebateFormData {
   title: string;
   left: string[];
   right: string[];
+  centerImage?: string;
 }
 
 interface DebateDataFormProps {
-  onDataChange?: (data: DebateFormData) => void;
+  onDataChange?: (data: any) => void;
 }
 
 export const DebateDataForm: React.FC<DebateDataFormProps> = ({ onDataChange }) => {
@@ -45,6 +46,33 @@ export const DebateDataForm: React.FC<DebateDataFormProps> = ({ onDataChange }) 
               borderRadius: '4px'
             }}
             maxLength={15}
+          />
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ display: 'block', marginBottom: '8px' }}>中心图片：</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setFormData({ 
+                    ...formData, 
+                    centerImage: reader.result as string 
+                  });
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: '1px solid #ddd',
+              borderRadius: '4px'
+            }}
           />
         </div>
 
