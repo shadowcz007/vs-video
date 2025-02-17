@@ -1,15 +1,5 @@
-import { Composition } from 'remotion';
-import { MyVideo } from './Video';
+import { Layout } from './components/Layout';
 
 export const RemotionRoot: React.FC = () => {
-  return (
-    <Composition
-      id="DebateVideo"
-      component={MyVideo}
-      durationInFrames={450} // 15秒 * 30fps
-      fps={30}
-      width={1080}
-      height={1920} // 竖屏格式
-    />
-  );
+  return <Layout />;
 }; 
