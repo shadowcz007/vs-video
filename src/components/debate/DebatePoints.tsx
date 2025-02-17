@@ -35,18 +35,18 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
     const rightText = alignedDebateData.right[textIndex] || getLastValidText(alignedDebateData.right, textIndex - 1);
 
     // 修改抖动动画逻辑
-    const shakeDuration = fps*0.3; // 1秒的持续时间
-    
+    const shakeDuration = fps * 0.3; // 1秒的持续时间
+
     const getShakeAnimation = (currentFrame: number) => {
         // 找到最近的触发帧
-        const activeShakeFrame = toggleText.find(startFrame => 
+        const activeShakeFrame = toggleText.find(startFrame =>
             currentFrame >= startFrame && currentFrame <= startFrame + shakeDuration
         );
 
         if (!activeShakeFrame) {
             return { x: 0, y: 0 };
         }
-        
+
         const progress = (currentFrame - activeShakeFrame) / shakeDuration;
         const intensity = spring({
             frame: currentFrame - activeShakeFrame,
@@ -57,7 +57,7 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
                 stiffness: 100,
             }
         });
-        
+
         return {
             x: Math.sin(progress * Math.PI * 8) * 10 * intensity,
             y: Math.cos(progress * Math.PI * 6) * 10 * intensity,
@@ -86,12 +86,12 @@ export const DebatePoints: React.FC<DebatePointsProps> = ({
                 transform: `translate(-50%, -50%) translate(${shakeOffset.x}px, ${shakeOffset.y}px)`,
                 zIndex: 99999
             }}>
-                <img 
-                    src={alignedDebateData.centerImage || staticFile('debate-center.png')} 
+                <img
+                    src={staticFile(alignedDebateData.centerImage || 'debate-center.png')}
                     alt="Debate Center"
                     style={{
                         width: 300,
-                        borderRadius:88,
+                        borderRadius: 88,
                         height: 'auto'
                     }}
                 />

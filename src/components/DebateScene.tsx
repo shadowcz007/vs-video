@@ -20,10 +20,44 @@ export const DebateScene: React.FC<DebateSceneProps> = ({ debateData }) => {
     let audio2 = staticFile("/a2.MP3")
     let music = staticFile("/music.mp3")
 
+    // 添加加载状态检查
+    if (!debateData) {
+        return (
+            <AbsoluteFill style={{
+                backgroundColor: 'black',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: 'white',
+                fontSize: 32
+            }}>
+                正在加载辩论数据...
+            </AbsoluteFill>
+        );
+    }
+
+    // 添加数据格式检查
+    if (!debateData.left || !debateData.right) {
+        console.error('辩论数据格式不正确:', debateData);
+        return (
+            <AbsoluteFill style={{
+                backgroundColor: 'black',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: 'red',
+                fontSize: 32
+            }}>
+                数据格式错误
+            </AbsoluteFill>
+        );
+    }
+
     // 确保左右两边数据长度一致，并使用总时长来计算每组数据的显示时间
     if (debateData.left.length !== debateData.right.length) {
         console.warn('左右辩论数据长度不一致！');
     }
+
     const ITEM_DURATION = durationInFrames / debateData.left.length;
 
     const textIndex = Math.floor(frame / ITEM_DURATION);
@@ -70,8 +104,8 @@ export const DebateScene: React.FC<DebateSceneProps> = ({ debateData }) => {
             <Sequence from={8}>
                 <Audio src={audio1} />
             </Sequence>
-            {toggleText.map((a) => (
-                <Sequence from={a}>
+            {toggleText.map((startFrame, index) => (
+                <Sequence from={startFrame} key={`audio-sequence-${index}`}>
                     <Audio src={audio2} />
                 </Sequence>
             ))}
